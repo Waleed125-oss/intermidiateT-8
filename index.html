@@ -1,0 +1,576 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Waleed — Portfolio</title>
+<style>
+  /* ===== CSS Reset & Variables ===== */
+  :root{
+    --bg: #f6f8fb;
+    --card: #ffffff;
+    --muted: #667085;
+    --accent: #2563eb;
+    --accent-2: #1e40af;
+    --glass: rgba(255,255,255,0.65);
+    --radius: 12px;
+    --shadow: 0 10px 30px rgba(12,20,40,0.06);
+    --maxw: 1100px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    font-family: Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial;
+    background:var(--bg);color:#0b1220;line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+    scroll-behavior:smooth;
+    transition: background .25s, color .25s;
+  }
+  a{color:inherit;text-decoration:none}
+  img{max-width:100%;display:block;border-radius:8px}
+  .container{width:92%;max-width:var(--maxw);margin:0 auto}
+  .hidden{display:none !important}
+  .muted{color:var(--muted)}
+  .btn{display:inline-flex;align-items:center;gap:.6rem;padding:.6rem 1rem;border-radius:10px;background:var(--accent);color:#fff;border:0;cursor:pointer;font-weight:700}
+  .btn.ghost{background:transparent;color:var(--accent);border:1px solid rgba(37,99,235,0.12)}
+  .section{padding:64px 0}
+  header{position:sticky;top:0;background:var(--card);border-bottom:1px solid rgba(12,20,40,0.04);z-index:40}
+  .nav{display:flex;align-items:center;justify-content:space-between;gap:16px;height:72px}
+  .logo{font-weight:800;color:var(--accent)}
+  nav.desktop{display:flex;gap:18px;align-items:center}
+  nav.desktop a{padding:8px 10px;border-radius:8px;color:#12202b;font-weight:600}
+  nav.desktop a:hover{background:rgba(12,20,40,0.03)}
+  .hamburger{display:none}
+
+  /* ===== Hero ===== */
+  .hero{display:grid;grid-template-columns:1fr 360px;gap:28px;align-items:center;padding:44px 0}
+  .intro h1{font-size:2.2rem;line-height:1.05}
+  .intro p{margin-top:12px;color:var(--muted)}
+  .profile{background:linear-gradient(180deg,#fff,#fbfdff);padding:14px;border-radius:16px;box-shadow:var(--shadow);text-align:center}
+  .profile img{width:160px;height:160px;border-radius:999px;object-fit:cover;margin:6px auto}
+  .profile .role{margin-top:8px;font-weight:700;color:var(--accent)}
+
+  /* ===== About ===== */
+  .about-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:center}
+  .card{background:var(--card);padding:18px;border-radius:12px;box-shadow:var(--shadow)}
+
+  /* ===== Skills ===== */
+  .skills-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+  .skill{display:flex;flex-direction:column;gap:8px}
+  .skill .bar{height:12px;background:#e8eefb;border-radius:999px;overflow:hidden}
+  .skill .fill{height:100%;width:0;background:linear-gradient(90deg,var(--accent),var(--accent-2));border-radius:999px;transition:width .9s cubic-bezier(.2,.9,.3,1)}
+
+  /* ===== Projects ===== */
+  .projects-controls{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+  .chip{padding:.4rem .7rem;border-radius:999px;background:#eef2ff;color:#233a78;cursor:pointer;font-weight:700}
+  .chip.active{background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#fff}
+  .projects-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+  .project{background:var(--card);padding:12px;border-radius:12px;box-shadow:var(--shadow);transition:transform .2s}
+  .project:hover{transform:translateY(-6px)}
+  .project .meta{display:flex;justify-content:space-between;align-items:center;margin-top:8px}
+  .project .links{display:flex;gap:8px}
+
+  /* ===== Contact ===== */
+  form{display:grid;gap:10px}
+  input,textarea{padding:10px;border:1px solid rgba(12,20,40,0.06);border-radius:8px;width:100%;font-family:inherit}
+  textarea{min-height:120px;resize:vertical}
+
+  /* ===== Modal ===== */
+  .modal-backdrop{position:fixed;inset:0;background:rgba(2,6,23,0.5);display:flex;align-items:center;justify-content:center;z-index:60}
+  .modal{background:var(--card);width:min(880px,95%);padding:18px;border-radius:12px;box-shadow:0 30px 80px rgba(2,6,23,0.4);max-height:90vh;overflow:auto}
+
+  /* ===== Back to top ===== */
+  #topBtn{position:fixed;right:18px;bottom:18px;background:var(--accent);color:#fff;padding:10px;border-radius:999px;border:none;cursor:pointer;box-shadow:0 10px 30px rgba(37,99,235,0.18);display:none;z-index:50}
+
+  /* ===== Footer ===== */
+  footer{padding:28px 0;margin-top:32px;text-align:center;color:var(--muted)}
+
+  /* ===== Responsiveness ===== */
+  @media(max-width:1000px){
+    .projects-grid{grid-template-columns:repeat(2,1fr)}
+    .hero{grid-template-columns:1fr}
+    .about-grid{grid-template-columns:1fr}
+    nav.desktop{display:none}
+    .hamburger{display:block;border-radius:10px;padding:8px;border:1px solid rgba(12,20,40,0.06);background:transparent}
+  }
+  @media(max-width:640px){
+    .projects-grid{grid-template-columns:1fr}
+    .skills-grid{grid-template-columns:1fr}
+    .hero{padding:20px 0}
+    .profile img{width:130px;height:130px}
+  }
+
+  /* ===== Dark Mode ===== */
+  body.dark{
+    --bg:#08090d;
+    --card:#0e1116;
+    --muted:#9aa4b2;
+    --accent:#7ea6ff;
+    --accent-2:#5a86ff;
+    color:#e8eef8;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="container nav" role="navigation" aria-label="Main">
+    <div class="logo">Waleed</div>
+    <nav class="desktop" aria-label="Primary">
+      <a href="#home">Home</a>
+      <a href="#about">About</a>
+      <a href="#skills">Skills</a>
+      <a href="#projects">Projects</a>
+      <a href="#contact">Contact</a>
+    </nav>
+
+    <div style="display:flex;gap:10px;align-items:center">
+      <button id="themeBtn" class="hamburger" aria-label="Toggle theme">🌙</button>
+      <button id="menuBtn" class="hamburger" aria-label="Open menu">☰</button>
+    </div>
+  </div>
+
+  <!-- mobile nav -->
+  <div id="mobileNav" style="display:none;background:var(--card);border-top:1px solid rgba(12,20,40,0.04)">
+    <div class="container" style="padding:12px 0;display:flex;flex-direction:column;gap:8px">
+      <a href="#home">Home</a>
+      <a href="#about">About</a>
+      <a href="#skills">Skills</a>
+      <a href="#projects">Projects</a>
+      <a href="#contact">Contact</a>
+    </div>
+  </div>
+</header>
+
+<main class="container">
+  <!-- HERO -->
+  <section id="home" class="hero section" aria-labelledby="hero-title">
+    <div class="intro">
+      <div style="display:flex;gap:8px;align-items:center">
+        <span style="background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#fff;padding:6px 10px;border-radius:999px;font-weight:700">Frontend Dev</span>
+        <span class="muted" style="font-size:.9rem">Based in Pakistan</span>
+      </div>
+      <h1 id="hero-title" style="margin-top:12px">Hi — I'm <strong>Waleed</strong><br/><span style="font-weight:500;color:var(--muted)">Building thoughtful web interfaces & delightful UX.</span></h1>
+      <p style="margin-top:14px" class="muted">I design and build accessible, responsive front-end apps using modern tools like HTML, CSS, JavaScript, and React. I love performant UI and clean code.</p>
+
+      <div style="margin-top:18px;display:flex;gap:12px;flex-wrap:wrap">
+        <a class="btn" href="#contact">Contact Me</a>
+        <a class="btn ghost" href="#projects">View Projects</a>
+      </div>
+
+      <div style="margin-top:18px;display:flex;gap:8px;flex-wrap:wrap">
+        <div class="muted">Available for freelance & internships</div>
+      </div>
+    </div>
+
+    <aside class="profile" aria-hidden="true">
+      <img src="https://picsum.photos/seed/you/400/400" alt="Your profile photo" />
+      <div style="margin-top:8px;font-weight:700">Waleed</div>
+      <div class="role">Front-End Developer</div>
+      <div style="margin-top:12px;display:flex;gap:8px;justify-content:center">
+        <a class="btn ghost" href="https://github.com" target="_blank" rel="noreferrer">GitHub</a>
+        <a class="btn ghost" href="https://linkedin.com" target="_blank" rel="noreferrer">LinkedIn</a>
+      </div>
+    </aside>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about" class="section" aria-labelledby="about-title">
+    <div class="container">
+      <h2 id="about-title">About Me</h2>
+      <div class="about-grid" style="margin-top:12px">
+        <div class="card">
+          <h3 style="margin-bottom:8px">Short Bio</h3>
+          <p class="muted">I'm a Full Stack Developer specializing in the MERN stack, with 3 years of experience building scalable, responsive web applications. I enjoy turning ideas and designs into robust, accessible solutions across both front-end and back-end. Passionate about clean code, performance optimization, and continuous learning to deliver seamless user experiences.</p>
+          <ul style="margin-top:12px;color:var(--muted);list-style:disc;padding-left:18px">
+            <li>Experience with HTML, CSS, JS, React, nodejs, ExpressJs, Mongodb</li>
+            <li>Focus on responsive & accessible interfaces</li>
+            <li>Open-source contributor & fast learner</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3 style="margin-bottom:8px">Quick facts</h3>
+          <p class="muted">Interests: Design systems, animations, performance, coffee ☕</p>
+          <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">
+            <span class="chip">React</span>
+            <span class="chip">JavaScript</span>
+            <span class="chip">CSS</span>
+            <span class="chip">NodeJs</span>
+            <span class="chip">ExpressJs</span>
+            <span class="chip">MongoDB</span>
+            <span class="chip">Mysql</span>
+            <span class="chip">Accessibility</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SKILLS -->
+  <section id="skills" class="section" aria-labelledby="skills-title">
+    <div class="container">
+      <h2 id="skills-title">Skills</h2>
+      <p class="muted" style="margin-top:6px">A selection of my front-end skills with proficiency levels.</p>
+
+      <div class="skills-grid" style="margin-top:16px">
+        <div class="skill card">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <strong>HTML & CSS</strong><span class="muted">95%</span>
+          </div>
+          <div class="bar"><div class="fill" data-fill="95%"></div></div>
+        </div>
+
+        <div class="skill card">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <strong>JavaScript</strong><span class="muted">90%</span>
+          </div>
+          <div class="bar"><div class="fill" data-fill="90%"></div></div>
+        </div>
+
+        <div class="skill card">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <strong>React</strong><span class="muted">85%</span>
+          </div>
+          <div class="bar"><div class="fill" data-fill="85%"></div></div>
+        </div>
+        
+          <div class="skill card">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <strong>NodeJs</strong><span class="muted">85%</span>
+          </div>
+          <div class="bar"><div class="fill" data-fill="85%"></div></div>
+        </div>
+         
+         <div class="skill card">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <strong>ExpressJs</strong><span class="muted">85%</span>
+          </div>
+          <div class="bar"><div class="fill" data-fill="85%"></div></div>
+        </div>
+            <div class="skill card">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <strong>MongoDb</strong><span class="muted">85%</span>
+          </div>
+          <div class="bar"><div class="fill" data-fill="85%"></div></div>
+        </div>
+         
+        <div class="skill card">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <strong>UI / UX</strong><span class="muted">82%</span>
+          </div>
+          <div class="bar"><div class="fill" data-fill="82%"></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROJECTS -->
+  <section id="projects" class="section" aria-labelledby="projects-title">
+    <div class="container">
+      <h2 id="projects-title">Projects</h2>
+      <p class="muted" style="margin-top:6px">Selected projects — click any card to view details.</p>
+
+      <div class="projects-controls" style="margin-top:12px">
+        <div class="chip active" data-filter="all">All</div>
+        <div class="chip" data-filter="web">Web App</div>
+        <div class="chip" data-filter="ui">UI Clone</div>
+        <div class="chip" data-filter="tool">Tooling</div>
+      </div>
+
+      <div class="projects-grid" id="projectsGrid">
+        <!-- Project 1 -->
+        <div class="project" data-type="web" data-slug="proj-one">
+          <img src="./images/Screenshot (49).png" alt="Project 1"/>
+          <h3 style="margin-top:10px">Project One</h3>
+          <p class="muted">A responsive web app with authentication and dashboards.</p>
+          <div class="meta">
+            <div class="muted">React • Node</div>
+            <div class="links">
+              <a class="muted" href="https://github.com/Waleed125-oss/task-4.git" target="_blank" rel="noreferrer">GitHub</a>
+              <button class="btn ghost viewBtn" data-slug="proj-one">View</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Project 2 -->
+        <div class="project" data-type="ui" data-slug="proj-two">
+          <img src="./images/Screenshot (48).png" alt="Project 2"/>
+          <h3 style="margin-top:10px">Project Two</h3>
+          <p class="muted">Pixel-perfect UI clone of a popular SaaS landing page.</p>
+          <div class="meta">
+            <div class="muted">HTML • CSS</div>
+            <div class="links">
+              <a class="muted" href="https://github.com/Waleed125-oss/task-5.git" target="_blank" rel="noreferrer">GitHub</a>
+              <button class="btn ghost viewBtn" data-slug="proj-two">View</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Project 3 -->
+        <div class="project" data-type="tool" data-slug="proj-three">
+          <img src="./images/Screenshot (47).png" alt="Project 3"/>
+          <h3 style="margin-top:10px">Project Three</h3>
+          <p class="muted">CLI tool that automates developer workflows.</p>
+          <div class="meta">
+            <div class="muted">Node • CLI</div>
+            <div class="links">
+              <a class="muted" href="https://github.com/Waleed125-oss/task-6.git" target="_blank" rel="noreferrer">GitHub</a>
+              <button class="btn ghost viewBtn" data-slug="proj-three">View</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact" class="section" aria-labelledby="contact-title">
+    <div class="container">
+      <h2 id="contact-title">Contact</h2>
+      <p class="muted" style="margin-top:6px">Shoot me a message — I reply within 24–48 hours.</p>
+
+      <div style="display:grid;grid-template-columns:1fr 360px;gap:18px;margin-top:14px">
+        <div class="card">
+          <form id="contactForm" aria-label="Contact form">
+            <input id="name" name="name" placeholder="Your Name" required>
+            <input id="email" name="email" placeholder="Your email" type="email" required>
+            <textarea id="message" name="message" placeholder="Message" required></textarea>
+            <div style="display:flex;gap:10px;align-items:center">
+              <button class="btn" type="submit">Send Message</button>
+              <div id="formStatus" class="muted" aria-live="polite"></div>
+            </div>
+          </form>
+        </div>
+
+        <aside class="card">
+          <h3>Get in touch</h3>
+          <p class="muted">Email: <a href="sardarwaleed463@gmail.com">sardarwaleed463@gmail.com</a></p>
+          <p class="muted">Location: Karachi, Pakistan</p>
+          <div style="margin-top:12px;display:flex;gap:8px">
+            <a class="btn ghost" href="https://github.com/Waleed125-oss" target="_blank" rel="noreferrer">GitHub</a>
+            <a class="btn ghost" href="https://www.linkedin.com/in/waleed-bin-shakeel-355466282?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app" target="_blank" rel="noreferrer">LinkedIn</a>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- Modal for project details -->
+<div id="modalRoot" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-label="Project details">
+  <div class="modal" id="modalContent">
+    <button id="closeModal" style="float:right;border:0;background:transparent;font-size:20px;cursor:pointer">✕</button>
+    <div id="modalBody"></div>
+  </div>
+</div>
+
+<button id="topBtn" title="Back to top">↑</button>
+
+<footer>
+  <div class="container">
+    <div style="margin-bottom:8px">© <span id="year"></span> Waleed — All rights reserved</div>
+    <div class="muted">Built with HTML, CSS & JavaScript</div>
+  </div>
+</footer>
+
+<script>
+  /* ===== Utility selectors ===== */
+  const q = s => document.querySelector(s);
+  const qa = s => Array.from(document.querySelectorAll(s));
+
+  // Mobile nav toggle
+  const menuBtn = q('#menuBtn');
+  const mobileNav = q('#mobileNav');
+  menuBtn.addEventListener('click', ()=> {
+    mobileNav.style.display = mobileNav.style.display === 'block' ? 'none' : 'block';
+  });
+
+  // Theme toggle
+  const themeBtn = q('#themeBtn');
+  const saved = localStorage.getItem('theme');
+  if(saved === 'dark') document.body.classList.add('dark');
+  themeBtn.textContent = document.body.classList.contains('dark') ? '☀️' : '🌙';
+  themeBtn.addEventListener('click', ()=> {
+    document.body.classList.toggle('dark');
+    themeBtn.textContent = document.body.classList.contains('dark') ? '☀️' : '🌙';
+    localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+  });
+
+  // Smooth close mobile nav on link click
+  qa('#mobileNav a, nav.desktop a').forEach(a=>{
+    a.addEventListener('click', (e)=>{
+      if(a.getAttribute('href').startsWith('#')){
+        mobileNav.style.display = 'none';
+      }
+    });
+  });
+
+  // Animate skill bars when in view
+  const fills = qa('.fill');
+  const skillsObserver = new IntersectionObserver((entries, obs)=>{
+    entries.forEach(ent=>{
+      if(ent.isIntersecting){
+        const fill = ent.target.querySelector('.fill');
+        const amount = fill ? fill.dataset.fill : null;
+        if(amount) fill.style.width = amount;
+        obs.unobserve(ent.target);
+      }
+    });
+  }, {threshold:0.25});
+  qa('.skill').forEach(el => skillsObserver.observe(el));
+
+  // Projects filtering
+  const chips = qa('.projects-controls .chip');
+  const projects = qa('.project');
+  qa('.projects-controls').forEach(container=>{
+    container.addEventListener('click', e=>{
+      const chip = e.target.closest('.chip');
+      if(!chip) return;
+      chips.forEach(c=>c.classList.toggle('active', c===chip));
+      const filter = chip.dataset.filter;
+      projects.forEach(p=>{
+        p.style.display = (filter === 'all' || p.dataset.type === filter) ? '' : 'none';
+      });
+    });
+  });
+
+  // Modal for project detail (SPA)
+  const modalRoot = q('#modalRoot');
+  const modalBody = q('#modalBody');
+  const closeModal = q('#closeModal');
+  const projectData = {
+    "proj-one": {
+      title: "Project One",
+      cover: "./images/Screenshot(49).png",
+      tech: "React, Node, MongoDB",
+      description: [
+        "Project One is a responsive dashboard app with authentication and live graphs.",
+        "Implemented component-driven UI, efficient state management and API integration.",
+        "Role: Front-end lead. Built reusable components and charts."
+      ],
+      links: { demo: "https://waleedportfolio9.netlify.app/", repo: "#" }
+    },
+    "proj-two": {
+      title: "Project Two",
+      cover: "./images/Screenshot(48).png",
+      tech: "HTML, CSS, JS",
+      description: [
+        "Pixel-perfect landing page clone with responsive behavior and animations.",
+        "Focus on accessibility and performance optimization."
+      ],
+      links: { demo: "https://updatedportfolio567.netlify.app", repo: "#" }
+    },
+    "proj-three": {
+      title: "Project Three",
+      cover: "./images/Screenshot(47).png",
+      tech: "Node CLI",
+      description: [
+        "A CLI tool that automates repetitive developer tasks and scaffolding.",
+        "Includes a small plugin system and good docs."
+      ],
+      links: {demo: "https://waleedweb54.netlify.app/ ", repo: "#" }
+    }
+  };
+
+  qa('.viewBtn').forEach(b=>{
+    b.addEventListener('click', (e)=>{
+      const slug = b.dataset.slug;
+      openModal(slug);
+    });
+  });
+  qa('.project').forEach(card=>{
+    card.addEventListener('click', (e)=>{
+      // Ignore clicks on links inside card
+      if(e.target.tagName === 'A' || e.target.classList.contains('viewBtn')) return;
+      const slug = card.dataset.slug;
+      openModal(slug);
+    });
+  });
+
+  function openModal(slug){
+    const data = projectData[slug];
+    if(!data) return;
+    modalBody.innerHTML = `
+      <img src="${data.cover}" alt="${data.title}" style="border-radius:10px;margin-bottom:12px"/>
+      <h2>${data.title}</h2>
+      <div class="muted" style="margin-bottom:12px">${data.tech}</div>
+      ${data.description.map(p=>`<p class="muted" style="margin-bottom:8px">${p}</p>`).join('')}
+      <div style="margin-top:12px;display:flex;gap:8px">
+        ${data.links.demo ? `<a class="btn" href="${data.links.demo}" target="_blank" rel="noreferrer">Live Demo</a>` : ''}
+        ${data.links.repo ? `<a class="btn ghost" href="${data.links.repo}" target="_blank" rel="noreferrer">Repository</a>` : ''}
+      </div>
+    `;
+    modalRoot.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+  }
+  closeModal.addEventListener('click', closeModalFn);
+  modalRoot.addEventListener('click', (e) => { if(e.target === modalRoot) closeModalFn(); });
+  document.addEventListener('keydown', (e)=> { if(e.key === 'Escape') closeModalFn(); });
+  function closeModalFn(){
+    modalRoot.classList.add('hidden');
+    document.body.style.overflow = '';
+  }
+
+  // Contact form (simulation)
+  const contactForm = q('#contactForm');
+  const formStatus = q('#formStatus');
+  contactForm.addEventListener('submit', (e)=>{
+    e.preventDefault();
+    const name = q('#name').value.trim();
+    const email = q('#email').value.trim();
+    const message = q('#message').value.trim();
+    if(!name || !email || !message){ formStatus.textContent = 'Please fill all fields.'; return; }
+    // Simulate sending (no backend). Show success, then reset.
+    formStatus.textContent = 'Sending...';
+    setTimeout(()=>{
+      formStatus.textContent = 'Message sent — thank you!';
+      contactForm.reset();
+      setTimeout(()=> formStatus.textContent = '', 4000);
+    }, 900);
+  });
+
+  // Back to top button
+  const topBtn = q('#topBtn');
+  window.addEventListener('scroll', ()=> {
+    topBtn.style.display = window.scrollY > 400 ? 'block' : 'none';
+  });
+  topBtn.addEventListener('click', ()=> window.scrollTo({top:0,behavior:'smooth'}));
+
+  // Intersection animations for sections (fade in)
+  const sections = qa('.section, .card, .project, .profile');
+  const io = new IntersectionObserver((entries, obs) => {
+    entries.forEach(en => {
+      if(en.isIntersecting){
+        en.target.style.opacity = 1;
+        en.target.style.transform = 'translateY(0)';
+        obs.unobserve(en.target);
+      }
+    });
+  }, {threshold:0.12});
+  sections.forEach(s => {
+    s.style.opacity = 0;
+    s.style.transform = 'translateY(18px)';
+    s.style.transition = 'transform .6s ease, opacity .6s ease';
+    io.observe(s);
+  });
+
+  // Set year
+  q('#year').textContent = new Date().getFullYear();
+
+  // Close mobile nav on outside click or link click
+  document.addEventListener('click', e=>{
+    if(mobileNav.style.display === 'block' && !mobileNav.contains(e.target) && e.target !== menuBtn) mobileNav.style.display = 'none';
+  });
+
+  // Keyboard ESC hides modal and mobile nav
+  document.addEventListener('keydown', (e) => {
+    if(e.key === 'Escape'){
+      closeModalFn();
+      mobileNav.style.display = 'none';
+    }
+  });
+</script>
+</body>
+</html>
